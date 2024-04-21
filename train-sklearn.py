@@ -18,15 +18,26 @@ def fix_format(token):
 
 
 def load_data(data):
-	features = []
-	labels = []
-	for token in data:
-		token = token.strip()
-		token = fix_format(token).split('\t')
-		token_dict = {feat.split('=')[0]:feat.split('=')[1] for feat in token[1:]}
-		features.append(token_dict)
-		labels.append(token[0])
-	return features, labels
+    features = []
+    labels = []
+    for token in data:
+        token = token.strip()
+        token = fix_format(token).split('\t')
+        if len(token) > 1:
+            try:
+                token_dict = {feat.split('=')[0]: feat.split('=')[1] for feat in token[1:] if '=' in feat}
+                features.append(token_dict)
+                labels.append(token[0])
+            except IndexError:
+                print(f"Error with token: {token}")
+        else:
+            print(f"Missing features for token: {token}")
+    return features, labels
+	# 	#token_dict = {feat.split('=')[0]:feat.split('=')[1] for feat in token[1:]}
+  	# 	token_dict = {feat.split('=')[0]:feat.split('=')[1] for feat in token[1:]}
+	# 	features.append(token_dict)
+	# 	labels.append(token[0])
+	# return features, labels
 
 
 if __name__ == '__main__':

@@ -38,13 +38,29 @@ def fix_format(token):
 
 
 
+# def prepare_instances(xseq):
+# 	features = []
+# 	for token in xseq:
+# 		token = fix_format('\t'.join(token)).split('\t')
+# 		token_dict = {feat.split('=')[0]:feat.split('=')[1] for feat in token[1:]}
+# 		features.append(token_dict)
+# 	return features
+
+
 def prepare_instances(xseq):
-	features = []
-	for token in xseq:
-		token = fix_format('\t'.join(token)).split('\t')
-		token_dict = {feat.split('=')[0]:feat.split('=')[1] for feat in token[1:]}
-		features.append(token_dict)
-	return features
+    features = []
+    for token in xseq:
+        token = fix_format('\t'.join(token)).split('\t')
+        if len(token) > 1:
+            try:
+                token_dict = {feat.split('=')[0]: feat.split('=')[1] for feat in token[1:] if '=' in feat}
+                features.append(token_dict)
+            except IndexError:
+                print(f"Error with token: {token}")
+        else:
+            print(f"Missing features for token: {token}")
+    return features
+
 
 
 if __name__ == '__main__':
