@@ -12,13 +12,52 @@ python extract-features.py $BASEDIR/data/train/ | tee train.cod | cut -f4- > tra
 
 # kill `cat /tmp/corenlp-server.running`
 
-# train model
-echo "Training model"
-python train-sklearn.py model.joblib vectorizer.joblib < train.cod.cl
+
+#NB model
+# train NB model
+echo "Training NB model"
+python train-nb.py model.joblib vectorizer.joblib < train.cod.cl
 # run model
-echo "Running model..."
-python predict-sklearn.py model.joblib vectorizer.joblib < devel.cod > devel.out
+echo "Running NB model..."
+python predict-sklearn.py model.joblib vectorizer.joblib < devel.cod > devel-nb.out
 # evaluate results
-echo "Evaluating results..."
-python evaluator.py DDI $BASEDIR/data/devel/ devel.out > devel.stats
+echo "Evaluating NB results..."
+python evaluator.py DDI $BASEDIR/data/devel/ devel-nb.out > devel-nb.stats
+
+
+# #SVM model
+# # train model
+# echo "Training SVM model"
+# python train-svm.py model.joblib vectorizer.joblib < train.cod.cl
+# # run model
+# echo "Running SVM model..."
+# python predict-sklearn.py model.joblib vectorizer.joblib < devel.cod > devel-svm.out
+# # evaluate results
+# echo "Evaluating SVM results..."
+# python evaluator.py DDI $BASEDIR/data/devel/ devel-svm.out > devel-svm.stats
+
+
+# #RF model
+# # train model
+# echo "Training RF model"
+# python train-rf.py model.joblib vectorizer.joblib < train.cod.cl
+# # run model
+# echo "Running RF model..."
+# python predict-sklearn.py model.joblib vectorizer.joblib < devel.cod > devel-rf.out
+# # evaluate results
+# echo "Evaluating RF results..."
+# python evaluator.py DDI $BASEDIR/data/devel/ devel-rf.out > devel-rf.stats
+
+
+
+# #CRF model
+# # train model
+# echo "Training CRF model"
+# python train-crf.py model.joblib vectorizer.joblib < train.cod.cl
+# # run model
+# echo "Running CRF model..."
+# python predict-sklearn.py model.joblib vectorizer.joblib < devel.cod > devel-crf.out
+# # evaluate results
+# echo "Evaluating CRF results..."
+# python evaluator.py DDI $BASEDIR/data/devel/ devel-crf.out > devel-crf.stats
 

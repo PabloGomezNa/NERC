@@ -7,6 +7,10 @@ from xml.dom.minidom import parse
 
 from deptree import *
 #import patterns
+import random
+
+
+random.seed(42)
 
 
 ## ------------------- 
@@ -15,9 +19,12 @@ from deptree import *
 def extract_features(tree, entities, e1, e2) :
    feats = set()
 
+   # print("ENTITIES:",entities,"ENTITY ONE", e1,"ENTITY TWO", e2)
    # get head token for each gold entity
    tkE1 = tree.get_fragment_head(entities[e1]['start'],entities[e1]['end'])
    tkE2 = tree.get_fragment_head(entities[e2]['start'],entities[e2]['end'])
+
+   # print("TKE1",tkE1, "TKE2",tkE2)
 
    if tkE1 is not None and tkE2 is not None:
       # features for tokens in between E1 and E2
@@ -56,6 +63,43 @@ def extract_features(tree, entities, e1, e2) :
 
       path = path1+"<"+tree.get_lemma(lcs)+"_"+tree.get_rel(lcs)+">"+path2      
       feats.add("path="+path)
+
+
+      ##########NEW FEATURES ADDED#########
+
+      
+
+      # Words, lemmas, PoS tags appearing before/in-between/after the target pair
+      # Before
+      words_before = tree.get_word(int(tkE1)-1) #for tk in range(tkE1)]
+      lemmas_before = tree.get_lemma(int(tkE1)-1).lower()# for tk in range(tkE1)]
+      pos_before = tree.get_tag(int(tkE1)-1) #      for tk in range(tkE1)]
+      if(len(words_before)!=0 and words_before!="<none>"):
+         feats.update(['word_before=' + words_before ])#for w in words_before])
+         feats.update(['lemma_before=' +  lemmas_before])
+         feats.update(['pos_before=' + pos_before])
+
+      # Between
+      words_between = [tree.get_word(tk) for tk in range(tkE1 + 1, tkE2)]
+      lemmas_between = [tree.get_lemma(tk).lower() for tk in range(tkE1 + 1, tkE2)]
+      pos_between = [tree.get_tag(tk) for tk in range(tkE1 + 1, tkE2)]
+      feats.update(['word_between=' + w for w in words_between])
+      feats.update(['lemma_between=' + l for l in lemmas_between])
+      feats.update(['pos_between=' + p for p in pos_between])
+
+      # After
+      if(tree.get_n_nodes()-1>tkE2):
+         words_after = tree.get_word(int(tkE2)+1)# for tk in range(tkE2 + 1, len(tree.tree.nodes))]
+         lemmas_after = tree.get_lemma(int(tkE2)+1)#.lower() for tk in range(tkE2 + 1, len(tree.tree.nodes))]
+         pos_after = tree.get_tag(int(tkE2)+1)# for tk in range(tkE2 + 1, len(tree.tree.nodes))]
+      else: 
+         words_after=""
+
+      
+      if(len(words_after)!=0 and words_after!="<none>"):
+         feats.update(['word_after=' + words_after])
+         feats.update(['lemma_after=' +  lemmas_after])
+         feats.update(['pos_after=' + pos_after])
       
    return feats
 
