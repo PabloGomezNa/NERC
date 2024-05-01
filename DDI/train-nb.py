@@ -30,9 +30,11 @@ if __name__ == '__main__':
 	y_train = np.asarray(y_train)
 	classes = np.unique(y_train)
 
+	# np.random.seed(42)
+
 	v = DictVectorizer()
 	X_train = v.fit_transform(train_features)
-	clf = MultinomialNB(alpha=0.01)
+	clf = MultinomialNB(alpha=0.01) #0.17
 	# for n in y_train:
 		# print(n)
 	clf.partial_fit(X_train, y_train, classes)
