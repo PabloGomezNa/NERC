@@ -27,7 +27,7 @@ if __name__ == '__main__':
     v = DictVectorizer()
     X_train = v.fit_transform(train_features)
 
-    # clf = SVC(kernel='linear', C=0.1)
+    clf = SVC(kernel='linear', C=0.125)
     # clf = SVC()
     clf.fit(X_train, y_train)
 

@@ -27,7 +27,7 @@ if __name__ == '__main__':
     v = DictVectorizer()
     X_train = v.fit_transform(train_features)
 
-    clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    clf = RandomForestClassifier(n_estimators=200, random_state=42)
     clf.fit(X_train, y_train)
 
     # Save classifier and DictVectorizer

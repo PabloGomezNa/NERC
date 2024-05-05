@@ -49,12 +49,14 @@ def extract_features(tree, entities, e1, e2) :
       # features about paths in the tree
       lcs = tree.get_LCS(tkE1,tkE2)
 
+      # 6 LCS tag/rel/word/lemma
       feats.add("lcs_tag="+tree.get_tag(lcs))
       feats.add("lcs_rel="+tree.get_rel(lcs))
       feats.add("lcs_word="+tree.get_word(lcs))
       feats.add("lcs_lemma="+tree.get_lemma(lcs))
       
-      
+      # 7 Path with Tag // 8 Path with Rel // 9 Path with Lemma // 10 Path with Tag and Rel
+
       pathorig1 = tree.get_up_path(tkE1,lcs)
       path1 = "<".join([tree.get_lemma(x)+"_"+tree.get_rel(x) for x in pathorig1])
       path_tag1 = "<".join([tree.get_tag(x) for x in pathorig1])
@@ -94,7 +96,7 @@ def extract_features(tree, entities, e1, e2) :
       # feats.add("path_rel_tag="+path_rel_tag)
 
 
-      # #Is relation direct or indirect
+      # 11 Direct / Indirect relation
       # if len(pathorig1)+len(pathorig2)<4:
       #    feats.add("direct_encoded=direct")
       # else:
@@ -104,7 +106,8 @@ def extract_features(tree, entities, e1, e2) :
 
     
 
-      #clue verbs
+      #1 Clue verbs // 2 Clue verbs position
+
       clue_verbs_effect=['tendency','stimulate','regulate','prostate','modification','accentuate','exacerbate','diminish','augment','exhibit','experience','counteract','potentiate','enhance','reduce','antagonize']
       clue_verbs_mechanism=['impair','inhibit','displace','accelerate','bind','induce','decrease','elevate','delay','react','faster','presumably','induction','substantially','minimally']
       clue_verbs_advise=['exceed','extreme','cautiously']
@@ -114,6 +117,7 @@ def extract_features(tree, entities, e1, e2) :
       clue_verbs_found_mechanism = 0
       clue_verbs_found_advise = 0
       clue_verbs_found_int = 0
+
 
       # cv_effect_position='0'
       # cv_mechanism_position='0'
@@ -178,6 +182,7 @@ def extract_features(tree, entities, e1, e2) :
       feats.add("clue_verbs_advise=" + str(clue_verbs_found_advise) )
       feats.add("clue_verbs_int=" + str(clue_verbs_found_int) )
 
+      # 3 Word/Lemma/PoS of context words
       # Words, lemmas, PoS tags appearing before/in-between/after the target pair
       # Before 1
       words_before = tree.get_word(int(tkE1)-1) 
@@ -298,13 +303,16 @@ def extract_features(tree, entities, e1, e2) :
 
       
 
-      # # Distance between entities
+      # 4 Distance Between entities
+
+
       # if int(tkE2)-int(tkE1) < 10:
       #    feats.add("distance=small")
       # else:
       #    feats.add("distance=large")
 
-      # #get offset span
+      # 5 Offset span
+
       # right,left=tree.get_subtree_offset_span(tkE1)
       # if right>3:
       #    feats.add("tk1_right=large")
